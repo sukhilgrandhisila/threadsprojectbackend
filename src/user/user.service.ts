@@ -35,7 +35,7 @@ export class UserService {
     return updated;
   }
 
-  async remove(id: string): Promise<void> {
+  async remove(id: string, user: any): Promise<void> {
     const res = await this.userModel.findByIdAndDelete(id).exec();
     if (!res) throw new NotFoundException(`User with ID ${id} not found`);
   }
@@ -45,5 +45,9 @@ export class UserService {
     return user || undefined;
   }
   // src/users/user.service.ts
+  async isAdmin(userId: string): Promise<boolean> {
+    const user = await this.userModel.findById(userId).exec();
+    return user?.role === 'admin';
+  }
 
 }

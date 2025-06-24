@@ -7,6 +7,8 @@ import {
   Patch,
   Delete,
   UseGuards,
+  Req,
+  ForbiddenException,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -38,8 +40,14 @@ export class UsersController {
     return this.usersService.update(id, updateUserDto);
   }
   @UseGuards(AuthGuard)
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(id);
+@Delete(':id')
+async remove(@Param('id') id: string, @Req() req: any) {
+  const isAdmin = await this.usersService.isAdmin(req.user.userId);
+  if (!isAdmin) {
+    throw new ForbiddenException('You are not allowed to delete this user');
   }
+
+  return this.usersService.remove(id, req.user);
+}
+
 }

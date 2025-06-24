@@ -7,10 +7,19 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
 import { LoggerMiddleware } from './logger/logger.middleware';
 import { RateLimitMiddleware } from 'rate-limit-middleware/rate-limit-middleware';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb+srv://sukhil:Ty2uaBOn43ukKVuc@cluster0.8bt6bsa.mongodb.net/database'),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+    }),
+    MongooseModule.forRootAsync({
+      useFactory: () => ({
+        uri: process.env.MONGO_URI,
+        }),
+    }), 
     UserModule,CommentsModule, AuthModule
   ],
   controllers: [AppController],
