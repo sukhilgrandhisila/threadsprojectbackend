@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { LoggerMiddleware } from './logger/logger.middleware';
 import { RateLimitMiddleware } from 'rate-limit-middleware/rate-limit-middleware';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { LoggingInterceptor } from './login/login.interceptor';
 
 @Module({
   imports: [
@@ -23,7 +24,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     UserModule,CommentsModule, AuthModule
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, LoggingInterceptor],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

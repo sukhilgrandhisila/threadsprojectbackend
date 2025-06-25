@@ -9,13 +9,16 @@ import {
   UseGuards,
   Req,
   ForbiddenException,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { LoggingInterceptor } from 'src/login/login.interceptor';
 
 @Controller('users')
+@UseInterceptors(LoggingInterceptor)
 export class UsersController {
   constructor(private readonly usersService: UserService) {}
 
