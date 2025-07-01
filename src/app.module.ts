@@ -7,8 +7,10 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
 import { LoggerMiddleware } from './logger/logger.middleware';
 import { RateLimitMiddleware } from 'rate-limit-middleware/rate-limit-middleware';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { LoggingInterceptor } from './login/login.interceptor';
+import { ConfigModule } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
+import { LoginInterceptor } from './login/login.interceptor';
+
 
 @Module({
   imports: [
@@ -19,12 +21,17 @@ import { LoggingInterceptor } from './login/login.interceptor';
     MongooseModule.forRootAsync({
       useFactory: () => ({
         uri: process.env.MONGO_URI,
+
         }),
     }), 
-    UserModule,CommentsModule, AuthModule
+    UserModule,CommentsModule, AuthModule,
+    JwtModule.register({
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '1h' },
+    }),
   ],
   controllers: [AppController],
-  providers: [AppService, LoggingInterceptor],
+  providers: [AppService, LoginInterceptor],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

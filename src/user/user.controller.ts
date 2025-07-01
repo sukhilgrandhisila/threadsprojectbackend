@@ -15,10 +15,10 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
-import { LoggingInterceptor } from 'src/login/login.interceptor';
+import { LoginInterceptor } from 'src/login/login.interceptor';
 
 @Controller('users')
-@UseInterceptors(LoggingInterceptor)
+@UseInterceptors(LoginInterceptor)
 export class UsersController {
   constructor(private readonly usersService: UserService) {}
 
